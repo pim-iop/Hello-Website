@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hello Creative Site — super duper fixed</title>
+
+<!-- load several Material Symbols sets; you can trim later -->
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=menu,search,settings,logout,login,home,info,light_mode,dark_mode,star,share,expand_more,close,play_circle,question_mark,calculate"
+/>
+
+<!-- basic reset and fonts -->
+<style>
+  :root{
+    --bg: #f0f0f0;
+    --fg: #222;
+    --accent: #4a90e2; /* blue accent */
+    --card: #fff;
+    --transition: 0.3s ease;
+  }
+  [data-theme="dark"]{
+    --bg: #181818;
+    --fg: #eee;
+    --accent: #8ab4f8;
+    --card: #242424;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    overflow-x: hidden;
+  }
+
+  /* Material Symbols default styling */
+  .material-symbols-outlined{
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 48;
+    display:inline-block;
+    line-height:1;
+    user-select:none;
+  }
+
+  /* top navbar */
+  header{
+    position: fixed;
+    top:0; left:0; right:0;
+    height:60px;
+    background: var(--card);
+    display:flex;
+    align-items:center;
+    padding: 0 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,.12);
+    z-index:1000;
+    transition: background var(--transition);
+  }
+  header .left, header .right{
+    display:flex; align-items:center;
+  }
+  header .left{gap:1rem;}
+  header .right{margin-left:auto; gap:1rem;}
+  header input[type="text"]{
+    border:1px solid #ccc;
+    border-radius:4px;
+    padding:.25rem .5rem;
+    font-size:1rem;
+    background: var(--bg);
+    color: var(--fg);
+    transition: border var(--transition);
+  }
+  header input[type="text"]:focus{
+    outline:none;
+    border-color: var(--accent);
+  }
+
+  /* menu drawer */
+  #drawer{
+    position:fixed;
+    top:60px; left:-240px;
+    width:240px; bottom:0;
+    background: var(--card);
+    transition: left var(--transition);
+    box-shadow: 2px 0 6px rgba(0,0,0,.15);
+    padding:1rem;
+    overflow-y:auto;
+    z-index:900;
+  }
+  #drawer.open{left:0;}
+  #drawer nav a{
+    display:flex; align-items:center; gap:.5rem;
+    text-decoration:none; color: var(--fg);
+    padding:.5rem 0;
+    border-radius:4px;
+    transition: background var(--transition);
+  }
+  #drawer nav a:hover{
+    background: rgba(0,0,0,.05);
+  }
+
+  /* hero section */
+  #hero{
+    margin-top:60px;
+    height:320px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    text-align:center;
+    overflow:hidden;
+  }
+  #hero::before{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(135deg,#ff9a9e,#fad0c4,#fad0c4);
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease infinite;
+    mix-blend-mode:multiply;
+    opacity:.6;
+  }
+  @keyframes gradientShift{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+  #hero h1{
+    position:relative;
+    font-size:2.5rem;
+    z-index:1;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+  }
+
+  /* cards grid */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:1rem;
+    padding:1rem;
+  }
+  .card{
+    background: var(--card);
+    border-radius:8px;
+    padding:1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    transition: transform var(--transition), box-shadow var(--transition);
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0,0,0,.15);
+  }
+  .card .title{
+    font-weight:bold;
+    font-size:1.1rem;
+  }
+  .card .content{
+    flex:1;
+    font-size:.95rem;
+  }
+  .card .actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:.5rem;
+  }
+  .card button{
+    background: var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    padding:.35rem .6rem;
+    cursor:pointer;
+    transition:background var(--transition);
+    font-size:.85rem;
+  }
+  .card button:hover{
+    background: #3c7ac1;
+  }
+
+  /* footer */
+  footer{
+    text-align:center;
+    padding:1rem;
+    background: var(--card);
+    margin-top:1rem;
+  }
+  footer a{
+    color: var(--accent);
+    text-decoration:none;
+    margin:0 .5rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- header with icons -->
+<header>
+  <div class="left">
+    <span id="menu-btn" class="material-symbols-outlined" style="cursor:pointer;">menu</span>
+    <input id="search-input" type="text" placeholder="Search..." />
+  </div>
+  <div class="right">
+    <span id="theme-toggle" class="material-symbols-outlined" style="cursor:pointer;"
+          title="Toggle light/dark mode">light_mode</span>
+    <span class="material-symbols-outlined" title="Settings" style="cursor:pointer;">settings</span>
+    <span class="material-symbols-outlined" title="Login" style="cursor:pointer;">login</span>
+    <span class="material-symbols-outlined" title="Logout" style="cursor:pointer;">logout</span>
+  </div>
+</header>
+
+<!-- drawer -->
+<div id="drawer">
+  <nav>
+    <a href="#"><span class="material-symbols-outlined">home</span>Home</a>
+    <a href="#"><span class="material-symbols-outlined">info</span>About</a>
+    <a href="#"><span class="material-symbols-outlined">star</span>Favorites</a>
+    <a href="#"><span class="material-symbols-outlined">share</span>Share</a>
+    <a href="#" id="close-drawer"><span class="material-symbols-outlined">close</span>Close</a>
+  </nav>
+</div>
+
+<!-- hero -->
+<section id="hero">
+  <h1 id="typed-hero">Hello, welcome to your creative page!</h1>
+</section>
+
+<!-- grid of example cards -->
+<section class="grid">
+  <!-- card 1: Random Quote -->
+  <div class="card">
+    <div class="title">Random Quote</div>
+    <div class="content" id="quote-box">Click below to load a quote.</div>
+    <div class="actions">
+      <button id="load-quote">Load quote</button>
+    </div>
+  </div>
+
+  <!-- card 2: Color preview -->
+  <div class="card">
+    <div class="title">Color preview</div>
+    <div class="content">
+      <div id="color-preview" style="height:60px; border-radius:6px;"></div>
+      <div id="color-code" style="margin-top:4px; font-size:0.9rem;">—</div>
+    </div>
+    <div class="actions">
+      <button id="new-color">New color</button>
+    </div>
+  </div>
+
+  <!-- card 3: Animated icon -->
+  <div class="card">
+    <div class="title">Animated icon</div>
+    <div class="content" style="display:flex; align-items:center; justify-content:center;">
+      <span id="spin-icon" class="material-symbols-outlined" style="font-size:64px;">star</span>
+    </div>
+    <div class="actions">
+      <button id="toggle-spin">Toggle spin</button>
+    </div>
+  </div>
+
+  <!-- card 4: Time & date -->
+  <div class="card">
+    <div class="title">Time & date</div>
+    <div class="content" id="time-box" style="font-size:1.2rem; text-align:center;">--:--:--</div>
+  </div>
+
+  <!-- card 5: Tip of the day -->
+  <div class="card">
+    <div class="title">Tip of the day</div>
+    <div class="content" id="tip-box">Click below for a tip!</div>
+    <div class="actions">
+      <button id="new-tip">New tip</button>
+    </div>
+  </div>
+
+  <!-- card 6: Extra link -->
+  <div class="card">
+    <div class="title">Extra link</div>
+    <div class="content">Explore more ideas or add your own widget cards here.</div>
+  </div>
+
+  <!-- new card: Drawing pad -->
+  <div class="card">
+    <div class="title">Drawing pad</div>
+    <canvas id="draw-canvas" width="240" height="160"
+            style="border:1px solid #ccc; border-radius:6px; width:100%;"></canvas>
+    <div class="actions">
+      <button id="clear-canvas">Clear</button>
+    </div>
+  </div>
+
+  <!-- new card: Mini quiz -->
+  <div class="card" id="quiz-card">
+    <div class="title">Mini Quiz</div>
+    <div class="content" id="quiz-content">
+      Click below to load a question.
+    </div>
+    <div class="actions">
+      <button id="start-quiz">Start quiz</button>
+    </div>
+  </div>
+
+  <!-- new card: Sound player -->
+  <div class="card">
+    <div class="title">Sound player</div>
+    <div class="content" style="text-align:center;">
+      <span class="material-symbols-outlined" style="font-size:64px;" id="sound-icon">
+        play_circle
+      </span>
+    </div>
+    <div class="actions">
+      <button id="play-sound">Play sound</button>
+    </div>
+  </div>
+
+  <!-- new card: Tiny calculator -->
+  <div class="card">
+    <div class="title">Calculator</div>
+    <div class="content" style="display:flex; flex-direction:column; gap:4px;">
+      <input id="calc-display" type="text" readonly
+             style="padding:4px; font-size:1rem; text-align:right;"/>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:4px;">
+        <!-- digits and ops -->
+        <button class="calc-btn">7</button>
+        <button class="calc-btn">8</button>
+        <button class="calc-btn">9</button>
+        <button class="calc-btn">/</button>
+
+        <button class="calc-btn">4</button>
+        <button class="calc-btn">5</button>
+        <button class="calc-btn">6</button>
+        <button class="calc-btn">*</button>
+
+        <button class="calc-btn">1</button>
+        <button class="calc-btn">2</button>
+        <button class="calc-btn">3</button>
+        <button class="calc-btn">-</button>
+
+        <button class="calc-btn">0</button>
+        <button class="calc-btn">.</button>
+        <button id="calc-eq" class="calc-btn">=</button>
+        <button class="calc-btn">+</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="calc-clear">Clear</button>
+    </div>
+  </div>
+</section>
+
+<!-- footer -->
+<footer>
+  Made with <span class="material-symbols-outlined" style="vertical-align:middle;">star</span> and
+  <span class="material-symbols-outlined" style="vertical-align:middle;">share</span> •
+  <a href="#">Help</a> • <a href="#">Privacy</a>
+</footer>
+
+<!-- dedicated audio element for sound player -->
+<audio id="sample-audio" preload="auto">
+  <source src="https://www.soundjay.com/buttons/sounds/button-09.mp3" type="audio/mpeg">
+  <!-- fallback text if audio fails -->
+  Your browser does not support the audio element.
+</audio>
+
+<!-- scripts -->
+<script>
+  // drawer toggle
+  const drawer = document.getElementById('drawer');
+  document.getElementById('menu-btn').onclick = () => drawer.classList.toggle('open');
+  document.getElementById('close-drawer').onclick = () => drawer.classList.remove('open');
+
+  // theme toggle
+  const themeBtn = document.getElementById('theme-toggle');
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  themeBtn.textContent = currentTheme === 'dark' ? 'dark_mode' : 'light_mode';
+
+  themeBtn.onclick = () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    themeBtn.textContent = next === 'dark' ? 'dark_mode' : 'light_mode';
+  };
+
+  // random quote (simple static list to avoid external fetch)
+  const quotes = [
+    "Creativity is intelligence having fun.",
+    "Make it simple, but significant.",
+    "Do what you can, with what you have.",
+    "Stay curious, keep building."
+  ];
+  document.getElementById('load-quote').onclick = () => {
+    const q = quotes[Math.floor(Math.random()*quotes.length)];
+    document.getElementById('quote-box').textContent = q;
+  };
+
+  // random color preview + show code
+  function setRandomColor(){
+    const r = Math.floor(Math.random()*256);
+    const g = Math.floor(Math.random()*256);
+    const b = Math.floor(Math.random()*256);
+    const col = `rgb(${r},${g},${b})`;
+    document.getElementById('color-preview').style.background = col;
+
+    // also display the hex code
+    const hex = '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('').toUpperCase();
+    document.getElementById('color-code').textContent = hex;
+  }
+  document.getElementById('new-color').onclick = setRandomColor;
+
+  // animated icon spin
+  let spinning = false;
+  document.getElementById('toggle-spin').onclick = () => {
+    const icon = document.getElementById('spin-icon');
+    spinning = !spinning;
+    if(spinning){
+      icon.style.animation = 'spin 1s linear infinite';
+    }else{
+      icon.style.animation = '';
+    }
+  };
+  // spin keyframes added dynamically
+  const styleSheet = document.createElement("style");
+  styleSheet.innerText = `@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}`;
+  document.head.appendChild(styleSheet);
+
+  // time & date updater
+  function updateTime(){
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2,'0');
+    const mm = String(now.getMinutes()).padStart(2,'0');
+    const ss = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('time-box').textContent = `${hh}:${mm}:${ss}`;
+  }
+  setInterval(updateTime,1000);
+  updateTime();
+
+  // tip of the day
+  const tips = [
+    "Organize your tasks in small steps.",
+    "Take breaks to refresh creativity.",
+    "Try a different color scheme each week.",
+    "Share one idea with a friend every day."
+  ];
+  document.getElementById('new-tip').onclick = () => {
+    const t = tips[Math.floor(Math.random()*tips.length)];
+    document.getElementById('tip-box').textContent = t;
+  };
+
+  // --------- Drawing pad logic ----------
+  const canvas = document.getElementById('draw-canvas');
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+
+  // helper to handle drawing coordinates regardless of canvas display scale
+  function getCanvasPos(e){
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
+    };
+  }
+
+  canvas.addEventListener('mousedown', e => {
+    drawing = true;
+    const pos = getCanvasPos(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  });
+  canvas.addEventListener('mousemove', e => {
+    if(!drawing) return;
+    const pos = getCanvasPos(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+  canvas.addEventListener('mouseup', () => drawing = false);
+  canvas.addEventListener('mouseleave', () => drawing = false);
+
+  document.getElementById('clear-canvas').onclick = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  // --------- Mini quiz logic ----------
+  const quizQuestions = [
+    {
+      q: "What color is the sky on a clear day?",
+      choices: ["Green", "Blue", "Red", "Purple"],
+      answer: 1
+    },
+    {
+      q: "Which animal barks?",
+      choices: ["Cat", "Dog", "Fish", "Bird"],
+      answer: 1
+    },
+    {
+      q: "2 + 2 = ?",
+      choices: ["3", "4", "5", "6"],
+      answer: 1
+    }
+  ];
+
+  document.getElementById('start-quiz').onclick = () => {
+    const idx = Math.floor(Math.random()*quizQuestions.length);
+    const qobj = quizQuestions[idx];
+
+    const content = document.getElementById('quiz-content');
+    content.innerHTML = `
+      <div style="font-weight:bold; margin-bottom:.5rem;">${qobj.q}</div>
+      ${qobj.choices.map((c,i) => `
+        <button class="quiz-choice" data-index="${i}"
+                style="margin:2px 0; width:100%; text-align:left;">
+          ${c}
+        </button>
+      `).join('')}
+      <div id="quiz-feedback" style="margin-top:.5rem; font-weight:bold;"></div>
+    `;
+
+    document.querySelectorAll('#quiz-content .quiz-choice').forEach(btn => {
+      btn.onclick = () => {
+        const chosen = parseInt(btn.dataset.index,10);
+        const feedback = document.getElementById('quiz-feedback');
+        if(chosen === qobj.answer){
+          feedback.textContent = "✔️ Correct!";
+          feedback.style.color = "green";
+        } else {
+          feedback.textContent = "❌ Try again.";
+          feedback.style.color = "red";
+        }
+      };
+    });
+  };
+
+  // --------- Sound player logic ----------
+  const audio = document.getElementById('sample-audio');
+
+  document.getElementById('play-sound').onclick = () => {
+    // ensure audio exists and play
+    if(audio){
+      audio.currentTime = 0;
+      audio.play().catch(err => {
+        // optional: show error if playback is blocked
+        console.warn('Audio playback failed:', err);
+      });
+    }
+  };
+
+  // --------- Tiny calculator logic ----------
+  const display = document.getElementById('calc-display');
+  const btns = document.querySelectorAll('.calc-btn');
+  btns.forEach(btn => {
+    btn.onclick = () => {
+      display.value += btn.textContent;
+    };
+  });
+  document.getElementById('calc-eq').onclick = () => {
+    try{
+      display.value = String(eval(display.value));
+    } catch(e){
+      display.value = "Err";
+    }
+  };
+  document.getElementById('calc-clear').onclick = () => {
+    display.value = "";
+  };
+
+  // --------- Typing effect for hero ----------
+  const messages = [
+    "Hello, welcome to your creative page!",
+    "More widgets, more fun!",
+    "Keep exploring!"
+  ];
+  let msgIdx = 0;
+  let charIdx = 0;
+  const typedHeader = document.getElementById('typed-hero');
+
+  function typeNextChar(){
+    if(msgIdx >= messages.length) msgIdx = 0;
+    const msg = messages[msgIdx];
+    typedHeader.textContent = msg.slice(0, charIdx+1);
+    charIdx++;
+    if(charIdx === msg.length){
+      setTimeout(() => {
+        charIdx = 0;
+        msgIdx++;
+        typedHeader.textContent = "";
+        setTimeout(typeNextChar, 800); // pause before next msg
+      }, 1500);
+    } else {
+      setTimeout(typeNextChar, 100);
+    }
+  }
+  typeNextChar();
+</script>
+</body>
+</html>
